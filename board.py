@@ -25,19 +25,50 @@ class Board:
             print('|'.join(board[i]))
             print('-'*20)
             
-    def updateBoard(self, row, column, ship, direction):
-        if direction.upper() == 'V':
-            for i in range(row, row+ships[ship]):
-                Board.board[i][column] = ship[0]
-        elif direction.upper() == 'H':
-            for i in range(column, column+ships[ship]):
-                Board.board[row][i] = ship[0]
+    def shipIndex(self, coordinateShip):
+    
+        column, row = list(coordinateShip)
+        row_index = int(row) - 1
+        col_index = coordinates[column]
+        return row_index, col_index
+
+    def updateBoard(self):
+        ships_list = list(Board.ships.keys())
+        i = 0
+        while i<len(ships_list):
+            ship = ships_list[i]
+            directionShip = input("Vertical or Horizontal: [V/H]: ")
+            coordinateShip = input("Enter {} coardinates: ".format(ship))
+            if not self.shipValidation(ship, coordinateShip, directionShip):
+                print('Coordinates in use, please re enter valide coordinates')
+                continue
+            row, column = self.shipIndex(coordinateShip)    
+            if directionShip.upper() == 'V':
+                for i in range(row, row+Board.ships[ship]):
+                    Board.board[i][column] = ship[0]
+            elif directionShip.upper() == 'H':
+                for i in range(column, column+Board.ships[ship]):
+                    Board.board[row][i] = ship[0]
+            i+=1
         return Board.board
+
+    def shipValidation(self, ship, coordinate, direction):
+        row, column = self.shipIndex(coordinate)
+        if direction.upper() == 'V':
+                for i in range(row, row + Board.ships[ship]):
+                    if Board.board[i][column] != ' ':
+                        return False
+        elif direction.upper() == 'H':
+            for i in range(column, column+Board.ships[ship]):
+                if Board.board[row][i] != ' ':
+                    return False
+        return True
+        
+                      
 
 obj = Board(10, 10)
 board = obj.emptyBoard()
 obj.displayBoard(board) 
-
 
 
                    
@@ -72,24 +103,5 @@ coordinates = {
   'J': 9,
 }
 
-ships = {
-  'Carrier': 5,
-  'Battleship': 4,
-  'Destroyer': 3,
-  'Submarine': 3,
-  'Patrol Boat': 2
-}
-
-selectShip = input("Select a ship: ")
-directionShip = input("Vertical or Horizontal: [V/H]: ")
-coordinateShip = input("Enter ship coardinates: ")
-
-column, row = list(coordinateShip)
-print(row, column)
-row_index = int(row) - 1
-col_index = coordinates[column]
-print(row_index, col_index)
-print(selectShip + directionShip + coordinateShip)
-
-board = obj.updateBoard(row_index, col_index, selectShip, directionShip)
+board = obj.updateBoard()
 obj.displayBoard(board)
