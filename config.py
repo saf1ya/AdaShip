@@ -1,7 +1,6 @@
-#pragma once //ensure header only included once during compilation
 import os
 
-# get the config from adaship_config.ini
+#Get the config from adaship_config.ini
 if "adaship_config.ini" in os.listdir(os.path.join(os.path.dirname(__file__))):
     with open(os.path.join(os.path.dirname(__file__), "adaship_config.ini"), 'r') as config_ini:
         ships = dict()
@@ -20,7 +19,7 @@ if "adaship_config.ini" in os.listdir(os.path.join(os.path.dirname(__file__))):
                     board_size = (10, 10)
             elif key.lower() == "boat":
                 boat, size = tuple(map(lambda x: x.strip(), value.split(",")))
-                # boat size must be a natural number
+                #Note boat size must be a natural number
                 ships[boat] = int(size)
 else:
     print("Could not find adaship_config.ini")
