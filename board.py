@@ -84,6 +84,14 @@ class Board:
                 self.board[y][index+col] = ship_obj
         return True
 
+    def hit(self, x:str, y:int):
+        #Get the col of the board
+        col = self.cols.get(x.upper())
+        coordinate_state = self.board[y][col]
+        if isinstance(coordinate_state, Ship) and (not coordinate_state.is_sunken()):
+            coordinate_state.hit()
+        self.board[y][col] = "H"
+
     def __str__(self):
         board = "  "+ (" ".join(self.cols.keys()) + "\n")
         row_index = 0
