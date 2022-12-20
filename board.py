@@ -92,6 +92,9 @@ class Board:
             coordinate_state.hit()
         self.board[y][col] = "H"
 
+    def get_ship_sunken_status(self):
+        return {key: value.is_sunken() for key, value in self.onboard_ships.items()}
+
     def __str__(self):
         board = "  "+ (" ".join(self.cols.keys()) + "\n")
         row_index = 0
