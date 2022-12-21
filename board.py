@@ -74,7 +74,7 @@ class Board:
                 print("Failed: to place %s at coordinates (%s, %d)" % (ship, x, y))
             return False
 
-        # Make a Ship class object to be used for the placement of the ship on the board
+        # make a Ship class object to be used for the placement of the ship on the board
         # same Ship class object will be placed on all the coordinates of the board that belong to that ship
         ship_obj = self.onboard_ships.get(ship)
         ship_obj.x = col
@@ -90,7 +90,7 @@ class Board:
                 self.board[y][index+col] = ship_obj
         return True
 
-   def auto_place_remaining_ship(self):
+    def auto_place_remaining_ship(self):
         for ship, ship_obj in self.onboard_ships.items():
             if ship_obj.x is None:
                 y = randint(0, board_size[0])
@@ -101,7 +101,6 @@ class Board:
                     x = choice(tuple(self.cols.keys()))
                     direction = choice(("H", "V"))
         return True
-
 
     def hit(self, x:str, y:int, auto_hit=False):
         # get the col of the board
@@ -122,11 +121,9 @@ class Board:
     def get_ship_sunken_status(self):
         return {key: value.is_sunken() for key, value in self.onboard_ships.items()}
 
-    
     @property
     def board_status(self):
-        return all(boat_obj.is_sunken()==False for boat_obj in self.onboard_ships.values())
-
+        return not all(boat_obj.is_sunken()==True for boat_obj in self.onboard_ships.values())
 
     def get_placed_and_not_placed_ships(self) -> tuple:
         """
