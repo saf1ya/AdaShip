@@ -90,6 +90,19 @@ class Board:
                 self.board[y][index+col] = ship_obj
         return True
 
+   def auto_place_remaining_ship(self):
+        for ship, ship_obj in self.onboard_ships.items():
+            if ship_obj.x is None:
+                y = randint(0, board_size[0])
+                x = choice(tuple(self.cols.keys()))
+                direction = choice(("H", "V"))
+                while not self.update_board(x, y, direction, ship, True):
+                    y = randint(0, board_size[0])
+                    x = choice(tuple(self.cols.keys()))
+                    direction = choice(("H", "V"))
+        return True
+
+
     def hit(self, x:str, y:int, auto_hit=False):
         # get the col of the board
         col = self.cols.get(x.upper())
