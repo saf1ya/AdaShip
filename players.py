@@ -1,5 +1,5 @@
 from random import choice, randint
-
+import sys
 from board import Board
 from config import ships, board_size
 from utils import get_coordinates_tuple
@@ -22,7 +22,7 @@ class Player:
         else:
             raise ValueError("Cannot set opponent of type %s" % type(opponent))
 
-    def set_up_board(self):
+    def set_up_board(self, with_mine = False):
         self.board = Board()
         while True:
             placed, not_placed = self.board.get_placed_and_not_placed_ships()
@@ -57,6 +57,8 @@ class Player:
                 print("Board is reset.")
                 self.board.reset() # reset the board
                 continue
+            elif boat.strip().lower() == "quit":
+                return "quit"
 
             if boat not in ships.keys():
                 print("Invalid boat name!!!")
@@ -78,7 +80,10 @@ class Player:
             # updating the board with the new entry of the boat placement
             self.board.update_board(x, y, direction, boat)
 
-        #
+        if with_mine:
+            # plant mines as the requirements of version 3
+            self.board.plant_mines()
+
         # display the board to player before continuing
         self.show_board()
         permission = input("Do you want to continue with this board? (y/n): ")
@@ -147,14 +152,17 @@ class Player:
 
 
 class Computer(Player):
-    def set_up_board(self):
+    def set_up_board(self, with_mine = False):
         self.board = Board()
         print("Generating computer board...")
         self.board.auto_place_remaining_ship()
         print("Computer has generated it's board.")
+        if with_mine:
+            self.board.plant_mines()
+        self.show_board()
 
     def play(self):
-        print("\nComputer's Chance")
+        print("\nComputer_%s's Chance" % str(self.player_id))
         print(self.board)
         x = choice(tuple(Board.cols.keys()))
         y = randint(0, board_size[0] - 1)
@@ -174,7 +182,7 @@ class Computer(Player):
         print("--"* board_size[0])
 
     def play_salvo(self):
-        print("\nComputer's Chance")
+        print("\nComputer_%s's Chance" % str(self.player_id))
         self.show_board()
         live_boats = self.board.get_live_boats()
         for coordinate in range(len(live_boats)):
@@ -197,7 +205,7 @@ class Computer(Player):
         return True
 
     def __str__(self):
-        return "Computer"
+        return "Computer_%s" % str(self.player_id)
 
     def __repr__(self):
-        return "Computer"
+        return "Computer_%s" % str(self.player_id)
